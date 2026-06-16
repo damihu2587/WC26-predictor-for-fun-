@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>2026世界杯精算引擎 V5.0</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; }
+        button { background: #007bff; color: white; cursor: pointer; border: none; }
+        .result { margin-top: 20px; display: none; }
+        .bar { display: flex; height: 30px; color: white; text-align: center; line-height: 30px; font-size: 12px; border-radius: 4px; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🏆 2026世界杯战力指数 V5.0 预测箱</h2>
+        <label>选择当前赛程场次：</label>
+        <select id="matchSelect">
+            <option value="">-- 请选择比赛 --</option>
+        </select>
+        <button onclick="runPrediction()">开始后台多维运算</button>
+        
+        <div id="resultBox" class="result">
+            <p id="scoreText" style="font-weight: bold;"></p>
+            <div class="bar">
+                <div id="winBar" style="background: #dc3545;"></div>
+                <div id="drawBar" style="background: #6c757d;"></div>
+                <div id="lossBar" style="background: #28a745;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let globalData = {};
+        // 自动读取同目录下的数据文件
+        fetch('./data.json')
+            .then(res => res.json())
+            .then(data => {
+                globalData = data;
+                const select = document.getElementById('matchSelect');
+                Object.keys(data).forEach(key => {
+                    let opt = document.createElement('option');
+                    opt.value = key;
+                    opt.innerText = `${data[key].stage}: ${data[key].team_A} vs ${data[key].team_B}`;
+                    select.appendChild(opt);
+                });
+            }).catch(err => console.error("未找到 data.json，请确保文件存在"));
+
+        function runPrediction() {
+            const matchId = document.getElementById('matchSelect').value;
+            if(!matchId) return;
+            const match = globalData[matchId];
+            document.getElementById('resultBox').style.display = 'block';
+            document.getElementById('scoreText').innerText = `${match.team_A}(${match.score_A}分) vs ${match.team_B}(${match.score_B}分)`;
+            
+            document.getElementById('winBar').style.width = (match.prob_A_win * 100) + '%';
+            document.getElementById('winBar').innerText = `胜 ${Math.round(match.prob_A_win * 100)}%`;
+            document.getElementById('drawBar').style.width = (match.prob_draw * 100) + '%';
+            document.getElementById('drawBar').innerText = `平 ${Math.round(match.prob_draw * 100)}%`;
+            document.getElementById('lossBar').style.width = (match.prob_B_win * 100) + '%';
+            document.getElementById('lossBar').innerText = `负 ${Math.round(match.prob_B_win * 100)}%`;
+        }
+    </script>
+</body>
+</html>
