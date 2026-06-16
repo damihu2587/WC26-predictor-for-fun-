@@ -1,0 +1,22 @@
+{
+  "match_01": {
+    "stage": "小组赛A组R2",
+    "team_A": "美国",
+    "team_B": "巴拉圭",
+    "score_A": 157.90,
+    "score_B": 137.37,
+    "prob_A_win": 0.58,
+    "prob_draw": 0.24,
+    "prob_B_win": 0.18
+  },
+  "match_02": {
+    "stage": "小组赛B组R2",
+    "team_A": "阿根廷",
+    "team_B": "阿尔及利亚",
+    "score_A": 185.78,
+    "score_B": 146.23,
+    "prob_A_win": 0.68,
+    "prob_draw": 0.20,
+    "prob_B_win": 0.12
+  }
+}
